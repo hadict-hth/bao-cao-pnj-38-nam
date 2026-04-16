@@ -49,6 +49,7 @@
 
         // ================= DỮ LIỆU MẶC ĐỊNH (Fallback) =================
         const defaultFunnelData = {
+            reportDate: "12/04/2026",
             totalRevenue: "1,760 Tỷ",
             totalCustomers: "4,220",
             reach: "3.02M",
@@ -91,8 +92,6 @@
             const [activeTab, setActiveTab] = React.useState('funnel');
             const [funnelData, setFunnelData] = React.useState(defaultFunnelData);
             const [adsData, setAdsData] = React.useState(defaultAdsData);
-            const [activeAd, setActiveAd] = React.useState(defaultAdsData[0]);
-            const [activeChannelFilter, setActiveChannelFilter] = React.useState('All');
 
             // Sync Data từ Google Sheets
             React.useEffect(() => {
@@ -131,24 +130,11 @@
                                 }));
                             if(parsedAds.length > 0) {
                                 setAdsData(parsedAds);
-                                setActiveAd(parsedAds[0]);
                             }
                         }
                     });
                 }
             }, []);
-
-            // Cập nhật Active Ad khi đổi Filter Kênh
-            React.useEffect(() => {
-                if (activeChannelFilter !== 'All') {
-                    const filtered = adsData.filter(ad => ad.channel === activeChannelFilter);
-                    if (filtered.length > 0 && !filtered.find(ad => ad.id === activeAd.id)) {
-                        setActiveAd(filtered[0]);
-                    }
-                }
-            }, [activeChannelFilter, adsData]);
-
-            const displayAds = activeChannelFilter === 'All' ? adsData : adsData.filter(ad => ad.channel === activeChannelFilter);
 
             return (
                 <div className="min-h-screen p-4 md:p-8 max-w-[1200px] mx-auto relative overflow-hidden">
@@ -174,7 +160,7 @@
                                 <span className="text-pnj-gold">SINH NHẬT PNJ 38 NĂM</span>
                             </h1>
                             <p className="text-pnj-blue/80 font-semibold mt-2 text-sm md:text-base">
-                                Giai đoạn: 04/10/2026 – 05/03/2026 &nbsp;|&nbsp; Ngày báo cáo: 12/04/2026 &nbsp;|&nbsp; Nguồn: Omni Digital
+                                Giai đoạn: 04/10/2026 – 05/03/2026 &nbsp;|&nbsp; Ngày cập nhật: {funnelData.reportDate} &nbsp;|&nbsp; Nguồn: Omni Digital
                             </p>
                         </div>
 
@@ -339,74 +325,42 @@
 
                     {/* ================= TAB 2: THƯ VIỆN ADS DEMO ================= */}
                     {activeTab === 'ads' && (
-                        <div className="flex flex-col gap-4 md:gap-6 relative z-10 animate-[fadeIn_0.5s_ease-in-out]">
+                        <div className="flex flex-col gap-6 relative z-10 animate-[fadeIn_0.5s_ease-in-out]">
                             
-                            {/* Filter Kênh (Mobile Friendly) */}
-                            <div className="w-full bg-white/60 p-3 md:p-4 rounded-xl border border-pnj-gold/30 shadow-sm backdrop-blur-sm">
-                                <p className="text-pnj-blue text-xs font-bold uppercase mb-2 ml-1">Lọc Theo Kênh Triển Khai:</p>
-                                <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1 snap-x">
-                                    {['All', 'Facebook', 'Google', 'Zalo'].map(channel => (
-                                        <button 
-                                            key={channel}
-                                            onClick={() => setActiveChannelFilter(channel)}
-                                            className={`snap-start flex-shrink-0 px-5 py-2 rounded-lg font-bold text-sm transition-all duration-300 border-2 ${
-                                                activeChannelFilter === channel
-                                                ? 'bg-pnj-blue text-white border-pnj-blue shadow-md'
-                                                : 'bg-white text-pnj-blue border-pnj-gold/40 hover:border-pnj-blue'
-                                            }`}
-                                        >
-                                            {channel === 'All' ? 'Tất Cả Các Kênh' : `Kênh ${channel}`}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Khung hiển thị Ảnh Lớn */}
-                            <div className="flex flex-col md:flex-row gap-0 bg-pnj-blue rounded-xl overflow-hidden border border-pnj-gold/40 shadow-xl">
-                                <div className="w-full md:w-2/3 h-[250px] md:h-[500px] bg-black relative flex items-center justify-center">
-                                    <img src={activeAd.image} alt={activeAd.title} className="max-h-full max-w-full object-contain animate-[fadeIn_0.3s_ease-in-out]" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:hidden"></div>
-                                </div>
-                                <div className="w-full md:w-1/3 p-5 md:p-8 flex flex-col justify-center text-white bg-pnj-blue">
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        <span className="inline-block px-3 py-1 bg-white text-pnj-blue text-xs font-black uppercase rounded w-fit border border-white">
-                                            {activeAd.channel}
-                                        </span>
-                                        <span className="inline-block px-3 py-1 bg-pnj-gold/20 text-pnj-gold text-xs font-bold uppercase rounded w-fit border border-pnj-gold">
-                                            {activeAd.campaign}
-                                        </span>
+                            {/* Danh sách Phân khu theo Kênh (Facebook, Google, Zalo) */}
+                            {['Facebook', 'Google', 'Zalo'].map(channel => {
+                                const channelAds = adsData.filter(ad => ad.channel === channel);
+                                if (channelAds.length === 0) return null;
+                                
+                                return (
+                                    <div key={channel} className="w-full bg-white/60 p-4 rounded-xl border border-pnj-gold/30 shadow-sm backdrop-blur-sm">
+                                        <h3 className="text-pnj-blue font-black uppercase text-lg md:text-xl mb-4 flex items-center gap-2">
+                                            <span className="w-2 h-6 bg-pnj-gold rounded-full"></span>
+                                            KÊNH DEMO: {channel}
+                                        </h3>
+                                        <div className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar snap-x snap-mandatory">
+                                            {channelAds.map((ad) => (
+                                                <div key={ad.id} className="snap-center flex-shrink-0 w-[85vw] sm:w-[350px] flex flex-col bg-pnj-blue rounded-xl overflow-hidden border border-pnj-gold/40 shadow-lg">
+                                                    <div className="w-full h-[200px] sm:h-[250px] bg-black relative flex items-center justify-center p-2">
+                                                        <img src={ad.image} alt={ad.title} className="max-h-full max-w-full object-contain" />
+                                                    </div>
+                                                    <div className="p-4 flex flex-col flex-1 text-white">
+                                                        <div className="flex flex-wrap gap-2 mb-2">
+                                                            <span className="px-2 py-1 bg-white text-pnj-blue text-[10px] font-black uppercase rounded border border-white">{ad.channel}</span>
+                                                            <span className="px-2 py-1 bg-pnj-gold/20 text-pnj-gold text-[10px] font-bold uppercase rounded border border-pnj-gold">{ad.campaign}</span>
+                                                        </div>
+                                                        <h4 className="text-base sm:text-lg font-black mb-2 leading-tight">{ad.title}</h4>
+                                                        <div className="mt-auto pt-3 border-t border-pnj-gold/30">
+                                                            <p className="text-[11px] text-pnj-gold uppercase font-bold mb-0.5">Định dạng:</p>
+                                                            <p className="text-sm text-white/90">{ad.format}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <h2 className="text-xl md:text-3xl font-black mb-4 leading-tight">{activeAd.title}</h2>
-                                    <div className="mt-auto md:mt-8 pt-4 border-t border-pnj-gold/30">
-                                        <p className="text-sm text-pnj-gold uppercase font-bold mb-1">Định dạng hiển thị:</p>
-                                        <p className="text-sm md:text-base text-white/90">{activeAd.format}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Danh sách Ảnh Thu Nhỏ (Đã lọc) */}
-                            <div className="w-full bg-white/40 p-4 rounded-xl border border-pnj-gold/20 mb-4">
-                                <h3 className="text-pnj-blue font-black uppercase text-sm mb-3 flex items-center gap-2">
-                                    <span className="w-2 h-4 bg-pnj-gold rounded-full"></span>
-                                    DANH SÁCH DEMO {activeChannelFilter !== 'All' ? `- ${activeChannelFilter}` : ''} ({displayAds.length} ảnh)
-                                </h3>
-                                <div className="flex overflow-x-auto gap-3 pb-2 hide-scrollbar snap-x">
-                                    {displayAds.map((ad) => (
-                                        <button 
-                                            key={ad.id}
-                                            onClick={() => setActiveAd(ad)} 
-                                            className={`flex-shrink-0 w-28 h-20 md:w-40 md:h-28 rounded-lg overflow-hidden border-2 snap-center transition-all duration-300 relative ${
-                                                activeAd.id === ad.id 
-                                                ? 'border-pnj-blue shadow-lg scale-100 opacity-100' 
-                                                : 'border-transparent opacity-60 hover:opacity-100 scale-95'
-                                            }`}
-                                        >
-                                            <img src={ad.image} className="w-full h-full object-cover" alt={`Thumb ${ad.id}`} />
-                                            {activeAd.id === ad.id && <div className="absolute inset-0 border-4 border-pnj-gold rounded-lg pointer-events-none"></div>}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+                                )
+                            })}
 
                         </div>
                     )}
