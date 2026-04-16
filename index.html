@@ -8,43 +8,24 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Montserrat+Arabic:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* Ép toàn bộ font theo Montserrat */
-        * {
-            font-family: 'Montserrat', 'Montserrat Arabic', sans-serif !important;
-        }
-
-        body { 
-            background-color: #fdfbf0; /* Nền kem sáng theo hình mẫu */
-            color: #003865; 
-        }
-        
+        * { font-family: 'Montserrat', 'Montserrat Arabic', sans-serif !important; }
+        body { background-color: #fdfbf0; color: #003865; }
         .text-pnj-gold { color: #BFA37C; }
         .text-pnj-blue { color: #003865; }
         .bg-pnj-gold { background-color: #BFA37C; }
         .bg-pnj-blue { background-color: #003865; }
         .border-pnj-gold { border-color: #BFA37C; }
         
-        /* Funnel block styling - Chuẩn 1 theme PNJ Blue & Gold */
-        .funnel-block { 
-            background-color: #003865;
-            border-top: 4px solid #BFA37C;
-            border-radius: 1rem;
-            color: white;
-            box-shadow: none;
-        }
-
-        /* Inner Cards */
+        .funnel-block { background-color: #003865; border-top: 4px solid #BFA37C; border-radius: 1rem; color: white; box-shadow: none; }
         .glass-card { background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(191, 163, 124, 0.3); backdrop-filter: blur(8px); }
         .flat-inner-card { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(191, 163, 124, 0.4); border-radius: 0.5rem; color: white; }
         
-        /* Chỉnh thanh cuộn chung */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #BFA37C; border-radius: 3px; }
-
-        /* Custom Scrollbar cho Carousel */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -66,27 +47,108 @@
         const IconImage = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>;
         const IconFilter = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>;
 
-        // Dữ liệu 10 Ads Demo
-        const adsData = [
-            { id: 1, image: "ads-zmp-carousel.png", campaign: "Campaign HO", title: "Chương trình truyền thông hoạt động SN PNJ", format: "Facebook Carousel / Conversion Objective" },
-            { id: 2, image: "ads-rtl-snpnj.png", campaign: "Campaign HO", title: "Chương trình truyền thông hoạt động SN PNJ", format: "Facebook Carousel Ads / Sale Objective" },
-            { id: 3, image: "disney-ads-snpnj.png", campaign: "Campaign Nhãn Hàng", title: "Chương trình SN PNJ Cùng Nhãn Hàng Disney|PNJ ", format: "Facebook Collection Ads / Sale Objective" },
-            { id: 4, image: "sanrio-ads.png", campaign: "Campaign Nhãn Hàng", title: "Chương trình Push Sale Ưu Đãi Nhãn Hàng", format: "Facebook Collection Ads / Sale Objective" },
-            { id: 5, image: "trendy-ads.png", campaign: "Campaign Nhãn Hàng", title: "Chương trình Push Sale BST Doraemon", format: "Facebook Collection Ads / Sale Objective" },
-            { id: 6, image: "watch-ads-snpnj.png", campaign: "Campaign Nhãn Hàng", title: "Chương trình SN PNJ Cùng Nhãn Hàng Watch|PNJ", format: "Facebook Carousel Ads / Sale Objective" },
-            { id: 7, image: "style-ads-snpnj.png", campaign: "Campaign Nhãn Hàng", title: "Chương trình SN PNJ Cùng Nhãn Hàng Style by PNJ", format: "Facebook Collection Ads / Sale Objective" },
-            { id: 8, image: "mancode-ads-snpnj-collect.png", campaign: "Campaign Nhãn Hàng", title: "Chương trình SN PNJ Cùng Nhãn Hàng MANCODE", format: "Facebook Collection Ads / Sale Objective" },
-            { id: 9, image: "arta-ads-snpnj.png", campaign: "Campaign Nhãn Hàng", title: "Chương trình SN PNJ Cùng Nhãn Hàng ARTA", format: "Facebook Carousel Ads / Sale Objective" },
-            { id: 10, image: "hcm-local-ads-2.png", campaign: "Local Ads", title: "Chương trình Push Sale Chi Nhánh HCM", format: "Facebook Post / Message Objective" },
-            { id: 11, image: "mbc-local-ads.png", campaign: "Local Ads", title: "Chương trình Push Sale Chi Nhánh MBC", format: "Facebook Post / Message Objective" },
-            { id: 12, image: "mtg-local-ads.png", campaign: "Local Ads", title: "Chương trình Push Sale Chi Nhánh MTG", format: "Facebook Post / Message Objective" },
-            { id: 13, image: "mty-local-ads.png", campaign: "Local Ads", title: "Chương trình Push Sale Chi Nhánh MTY", format: "Facebook Post / Message Objective" },
-            { id: 14, image: "tnn-local-ads.png", campaign: "Local Ads", title: "Chương trình Push Sale Chi Nhánh TNN", format: "Facebook Post / Message Objective" },
+        // ================= DỮ LIỆU MẶC ĐỊNH (Fallback) =================
+        const defaultFunnelData = {
+            totalRevenue: "1,760 Tỷ",
+            totalCustomers: "4,220",
+            reach: "3.02M",
+            campHO: "1.9M",
+            campNhan: "625K",
+            localAds: "304K",
+            interaction: "212.8K",
+            userInWeb: "193,824",
+            inboxHO: "4.5K",
+            inboxCN: "9.3K",
+            clickGMB: "5,115",
+            revKHC: "29.4 Tỷ",
+            khKHC: "2.393 Khách",
+            revKHM: "14.2 Tỷ",
+            khKHM: "1.827 Khách"
+        };
+
+        const defaultAdsData = [
+            { id: 1, image: "ads-zmp-carousel.png", channel: "Facebook", campaign: "Campaign HO", title: "Chương trình truyền thông hoạt động SN PNJ", format: "Facebook Carousel" },
+            { id: 2, image: "ads-rtl-snpnj.png", channel: "Facebook", campaign: "Campaign HO", title: "Chương trình truyền thông hoạt động SN PNJ", format: "Facebook Carousel Ads" },
+            { id: 3, image: "disney-ads-snpnj.png", channel: "Facebook", campaign: "Campaign Nhãn Hàng", title: "Chương trình SN PNJ Cùng Nhãn Hàng Disney", format: "Facebook Collection Ads" },
+            { id: 4, image: "sanrio-ads.png", channel: "Google", campaign: "Campaign Nhãn Hàng", title: "Chương trình Push Sale Ưu Đãi Nhãn Hàng", format: "Google Display Network" },
+            { id: 5, image: "trendy-ads.png", channel: "Google", campaign: "Campaign Nhãn Hàng", title: "Chương trình Push Sale BST Doraemon", format: "Google Search Ads" },
+            { id: 6, image: "watch-ads-snpnj.png", channel: "Facebook", campaign: "Campaign Nhãn Hàng", title: "Chương trình SN PNJ Cùng Nhãn Hàng Watch", format: "Facebook Carousel Ads" },
+            { id: 7, image: "style-ads-snpnj.png", channel: "Zalo", campaign: "Campaign Nhãn Hàng", title: "Chương trình SN PNJ Cùng Style by PNJ", format: "Zalo Official Account" },
+            { id: 8, image: "mancode-ads-snpnj-collect.png", channel: "Zalo", campaign: "Campaign Nhãn Hàng", title: "Chương trình SN PNJ Cùng MANCODE", format: "Zalo Broadcast" },
+            { id: 9, image: "arta-ads-snpnj.png", channel: "Facebook", campaign: "Campaign Nhãn Hàng", title: "Chương trình SN PNJ Cùng Nhãn Hàng ARTA", format: "Facebook Carousel Ads" },
+            { id: 10, image: "hcm-local-ads-2.png", channel: "Facebook", campaign: "Local Ads", title: "Chương trình Push Sale Chi Nhánh HCM", format: "Facebook Post" },
+            { id: 11, image: "mbc-local-ads.png", channel: "Facebook", campaign: "Local Ads", title: "Chương trình Push Sale Chi Nhánh MBC", format: "Facebook Post" },
+            { id: 12, image: "mtg-local-ads.png", channel: "Google", campaign: "Local Ads", title: "Chương trình Push Sale Chi Nhánh MTG", format: "Google Maps Local" },
+            { id: 13, image: "mty-local-ads.png", channel: "Zalo", campaign: "Local Ads", title: "Chương trình Push Sale Chi Nhánh MTY", format: "Zalo Ads" },
+            { id: 14, image: "tnn-local-ads.png", channel: "Facebook", campaign: "Local Ads", title: "Chương trình Push Sale Chi Nhánh TNN", format: "Facebook Post" }
         ];
+
+        // ================= CẤU HÌNH LINK GOOGLE SHEETS =================
+        const LINK_GOOGLE_SHEET_FUNNEL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQdqb34waPwXhUxuYGmAMx_tBw8D-UezoLCMmKgi0KfJB9HmBDuDm_NX9BIdq7HS4ecu3fadSZ70Ss6/pub?gid=0&single=true&output=csv"; 
+        const LINK_GOOGLE_SHEET_ADS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQdqb34waPwXhUxuYGmAMx_tBw8D-UezoLCMmKgi0KfJB9HmBDuDm_NX9BIdq7HS4ecu3fadSZ70Ss6/pub?gid=1071109814&single=true&output=csv";
 
         const App = () => {
             const [activeTab, setActiveTab] = React.useState('funnel');
-            const [activeAdIndex, setActiveAdIndex] = React.useState(0);
+            const [funnelData, setFunnelData] = React.useState(defaultFunnelData);
+            const [adsData, setAdsData] = React.useState(defaultAdsData);
+            const [activeAd, setActiveAd] = React.useState(defaultAdsData[0]);
+            const [activeChannelFilter, setActiveChannelFilter] = React.useState('All');
+
+            // Sync Data từ Google Sheets
+            React.useEffect(() => {
+                // Fetch Funnel
+                if (LINK_GOOGLE_SHEET_FUNNEL.includes("http")) {
+                    Papa.parse(LINK_GOOGLE_SHEET_FUNNEL, {
+                        download: true,
+                        header: true,
+                        complete: (results) => {
+                            let updatedFunnel = { ...defaultFunnelData };
+                            results.data.forEach(row => {
+                                if (row.Metric && row.Value) {
+                                    updatedFunnel[row.Metric.trim()] = row.Value.trim();
+                                }
+                            });
+                            setFunnelData(updatedFunnel);
+                        }
+                    });
+                }
+                
+                // Fetch Ads
+                if (LINK_GOOGLE_SHEET_ADS.includes("http")) {
+                    Papa.parse(LINK_GOOGLE_SHEET_ADS, {
+                        download: true,
+                        header: true,
+                        complete: (results) => {
+                            const parsedAds = results.data
+                                .filter(row => row.ID)
+                                .map(row => ({
+                                    id: row.ID,
+                                    image: row.Image,
+                                    channel: row.Channel || "Facebook",
+                                    campaign: row.Campaign,
+                                    title: row.Title,
+                                    format: row.Format
+                                }));
+                            if(parsedAds.length > 0) {
+                                setAdsData(parsedAds);
+                                setActiveAd(parsedAds[0]);
+                            }
+                        }
+                    });
+                }
+            }, []);
+
+            // Cập nhật Active Ad khi đổi Filter Kênh
+            React.useEffect(() => {
+                if (activeChannelFilter !== 'All') {
+                    const filtered = adsData.filter(ad => ad.channel === activeChannelFilter);
+                    if (filtered.length > 0 && !filtered.find(ad => ad.id === activeAd.id)) {
+                        setActiveAd(filtered[0]);
+                    }
+                }
+            }, [activeChannelFilter, adsData]);
+
+            const displayAds = activeChannelFilter === 'All' ? adsData : adsData.filter(ad => ad.channel === activeChannelFilter);
 
             return (
                 <div className="min-h-screen p-4 md:p-8 max-w-[1200px] mx-auto relative overflow-hidden">
@@ -112,7 +174,7 @@
                                 <span className="text-pnj-gold">SINH NHẬT PNJ 38 NĂM</span>
                             </h1>
                             <p className="text-pnj-blue/80 font-semibold mt-2 text-sm md:text-base">
-                                Giai đoạn: 04/10/2026 – 05/03/2026 &nbsp;|&nbsp; Ngày báo cáo: 12/04/2026 &nbsp;|&nbsp; Nguồn: Omni Digital & K20
+                                Giai đoạn: 04/10/2026 – 05/03/2026 &nbsp;|&nbsp; Ngày báo cáo: 12/04/2026 &nbsp;|&nbsp; Nguồn: Omni Digital
                             </p>
                         </div>
 
@@ -120,12 +182,12 @@
                         <div className="flex gap-4">
                             <div className="glass-card p-4 rounded-xl w-40 md:w-48 text-center shadow-sm">
                                 <p className="text-pnj-blue/70 text-xs font-bold mb-1 uppercase tracking-wider">Doanh Thu</p>
-                                <h2 className="text-2xl md:text-3xl font-black text-pnj-gold">43.6 Tỷ</h2>
+                                <h2 className="text-2xl md:text-3xl font-black text-pnj-gold">{funnelData.totalRevenue}</h2>
                                 <p className="flex justify-center items-center gap-1 mt-1 text-pnj-gold text-xs font-bold"><IconTrendingUp /> +48.9% YoY</p>
                             </div>
                             <div className="glass-card p-4 rounded-xl w-40 md:w-48 text-center shadow-sm">
                                 <p className="text-pnj-blue/70 text-xs font-bold mb-1 uppercase tracking-wider">Khách Hàng</p>
-                                <h2 className="text-2xl md:text-3xl font-black text-pnj-blue">4,220</h2>
+                                <h2 className="text-2xl md:text-3xl font-black text-pnj-blue">{funnelData.totalCustomers}</h2>
                                 <p className="flex justify-center items-center gap-1 mt-1 text-pnj-gold text-xs font-bold"><IconTrendingUp /> +44.7% YoY</p>
                             </div>
                         </div>
@@ -133,16 +195,10 @@
 
                     {/* Tab Navigation */}
                     <div className="flex justify-center gap-4 mb-8 relative z-10">
-                        <button 
-                            onClick={() => setActiveTab('funnel')} 
-                            className={`flex items-center gap-2 px-6 py-2.5 font-bold rounded-full border-2 transition-all duration-300 ${activeTab === 'funnel' ? 'bg-pnj-blue text-white border-pnj-blue shadow-md' : 'bg-transparent text-pnj-blue border-pnj-blue hover:bg-pnj-blue/10'}`}
-                        >
+                        <button onClick={() => setActiveTab('funnel')} className={`flex items-center gap-2 px-6 py-2.5 font-bold rounded-full border-2 transition-all duration-300 ${activeTab === 'funnel' ? 'bg-pnj-blue text-white border-pnj-blue shadow-md' : 'bg-transparent text-pnj-blue border-pnj-blue hover:bg-pnj-blue/10'}`}>
                             <IconFilter /> Báo Cáo Phễu (Funnel)
                         </button>
-                        <button 
-                            onClick={() => setActiveTab('ads')} 
-                            className={`flex items-center gap-2 px-6 py-2.5 font-bold rounded-full border-2 transition-all duration-300 ${activeTab === 'ads' ? 'bg-pnj-blue text-white border-pnj-blue shadow-md' : 'bg-transparent text-pnj-blue border-pnj-blue hover:bg-pnj-blue/10'}`}
-                        >
+                        <button onClick={() => setActiveTab('ads')} className={`flex items-center gap-2 px-6 py-2.5 font-bold rounded-full border-2 transition-all duration-300 ${activeTab === 'ads' ? 'bg-pnj-blue text-white border-pnj-blue shadow-md' : 'bg-transparent text-pnj-blue border-pnj-blue hover:bg-pnj-blue/10'}`}>
                             <IconImage /> Thư Viện Ads Demo
                         </button>
                     </div>
@@ -150,70 +206,61 @@
                     {/* ================= TAB 1: FUNNEL REPORT ================= */}
                     {activeTab === 'funnel' && (
                         <div className="flex flex-col gap-0 relative w-full z-10 animate-[fadeIn_0.5s_ease-in-out]">
-                            
-                            {/* --- STAGE 1: ADTECH --- */}
+                            {/* --- STAGE 1 --- */}
                             <div className="flex flex-col items-center w-full">
                                 <div className="funnel-block w-full p-8 text-center">
-                                    <h3 className="text-xl font-black text-white/90 uppercase flex items-center justify-center gap-2 mb-4">
-                                        <IconMegaphone /> 1. Nguồn Truy Cập Adtech
-                                    </h3>
-                                    
+                                    <h3 className="text-xl font-black text-white/90 uppercase flex items-center justify-center gap-2 mb-4"><IconMegaphone /> 1. Nguồn Truy Cập Adtech</h3>
                                     <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 mb-6">
                                         <div className="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-2xl border border-pnj-gold/30">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg" alt="Facebook Ads" className="h-10 w-10" />
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg" alt="Facebook" className="h-10 w-10" />
                                             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Ads_logo.svg" alt="Google Ads" className="h-10 w-10 bg-white rounded-full p-1" />
                                         </div>
-                                        <div className="text-5xl font-black text-white text-center">
-                                            3.02M <span className="text-xl font-bold text-pnj-gold">REACH</span>
-                                        </div>
+                                        <div className="text-5xl font-black text-white text-center">{funnelData.reach} <span className="text-xl font-bold text-pnj-gold">REACH</span></div>
                                     </div>
-                                    
                                     <div className="flex flex-col md:flex-row justify-center gap-4 text-left">
                                         <div className="flat-inner-card p-4 flex-1 text-center">
                                             <p className="text-pnj-gold text-xs font-bold uppercase mb-1">Campaign HO</p>
-                                            <p className="text-3xl font-bold text-white">1.9M</p>
+                                            <p className="text-3xl font-bold text-white">{funnelData.campHO}</p>
                                         </div>
                                         <div className="flat-inner-card p-4 flex-1 text-center">
                                             <p className="text-pnj-gold text-xs font-bold uppercase mb-1">Campaign Nhãn Hàng</p>
-                                            <p className="text-3xl font-bold text-white">625K</p>
+                                            <p className="text-3xl font-bold text-white">{funnelData.campNhan}</p>
                                         </div>
                                         <div className="flat-inner-card p-4 flex-1 text-center">
                                             <p className="text-pnj-gold text-xs font-bold uppercase mb-1">Local Ads</p>
-                                            <p className="text-3xl font-bold text-white">304K</p>
+                                            <p className="text-3xl font-bold text-white">{funnelData.localAds}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="py-2"><IconArrowDown /></div>
                             </div>
 
-                            {/* --- STAGE 2: CƠ HỘI BÁN HÀNG --- */}
+                            {/* --- STAGE 2 --- */}
                             <div className="flex flex-col items-center w-full">
                                 <div className="funnel-block w-[95%] p-8 text-center">
-                                    <h3 className="text-xl font-black text-white/90 uppercase flex items-center justify-center gap-2 mb-1">
-                                        <IconMousePointer /> 2. Cơ Hội Bán Hàng
-                                    </h3>
+                                    <h3 className="text-xl font-black text-white/90 uppercase flex items-center justify-center gap-2 mb-1"><IconMousePointer /> 2. Cơ Hội Bán Hàng</h3>
                                     <p className="text-sm text-pnj-gold mb-4 font-medium">User in Web & Lead in Inbox</p>
-                                    <div className="text-4xl font-black text-white mb-6">212.8K <span className="text-xl font-bold text-pnj-gold">TƯƠNG TÁC</span></div>
+                                    <div className="text-4xl font-black text-white mb-6">{funnelData.interaction} <span className="text-xl font-bold text-pnj-gold">TƯƠNG TÁC</span></div>
                                     
                                     <div className="flex flex-col md:flex-row justify-center gap-4 text-left">
                                         <div className="flat-inner-card p-4 flex-1 text-center flex flex-col items-center justify-center">
                                             <div className="mb-2 text-white/80"><IconWorldWideWeb /></div>
                                             <p className="text-pnj-gold text-xs font-bold uppercase mb-1">User In Web</p>
-                                            <p className="text-3xl font-bold text-white">193,824</p>
+                                            <p className="text-3xl font-bold text-white">{funnelData.userInWeb}</p>
                                         </div>
                                         <div className="flat-inner-card p-4 flex-[1.5] text-center flex flex-col items-center justify-center">
                                             <div className="mb-2 text-white/80"><IconEnvelope /></div>
-                                            <p className="text-pnj-gold text-xs font-bold uppercase mb-1">Lead Inbox (13.9K)</p>
+                                            <p className="text-pnj-gold text-xs font-bold uppercase mb-1">Lead Inbox</p>
                                             <div className="flex justify-around mt-1 items-center w-full">
-                                                <div><span className="text-white text-2xl font-bold">4.5K</span> <span className="text-sm text-white/60">HO</span></div>
+                                                <div><span className="text-white text-2xl font-bold">{funnelData.inboxHO}</span> <span className="text-sm text-white/60">HO</span></div>
                                                 <div className="text-pnj-gold/50 px-2">|</div>
-                                                <div><span className="text-white text-2xl font-bold">9.3K</span> <span className="text-sm text-white/60">CN</span></div>
+                                                <div><span className="text-white text-2xl font-bold">{funnelData.inboxCN}</span> <span className="text-sm text-white/60">CN</span></div>
                                             </div>
                                         </div>
                                         <div className="flat-inner-card p-4 flex-1 text-center flex flex-col items-center justify-center">
-                                            <img src="https://cdn-icons-png.flaticon.com/512/2838/2838912.png" alt="Click Chỉ Đường" className="h-10 w-10 mb-2 invert opacity-80" />
+                                            <img src="https://cdn-icons-png.flaticon.com/512/2838/2838912.png" alt="Click GMB" className="h-10 w-10 mb-2 invert opacity-80" />
                                             <p className="text-pnj-gold text-xs font-bold uppercase mb-1">Click Chỉ Đường</p>
-                                            <p className="text-3xl font-bold text-white">5,115</p>
+                                            <p className="text-3xl font-bold text-white">{funnelData.clickGMB}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -221,47 +268,37 @@
 
                             <div className="py-2 flex justify-center w-full"><IconArrowDown /></div>
 
-                            {/* --- STAGE 3: CHIA 2 LUỒNG CHUYỂN ĐỔI (Grouped Wrapper to fix Mobile Linear view) --- */}
+                            {/* --- STAGE 3: CHIA 2 LUỒNG --- */}
                             <div className="w-full relative px-2 md:px-0">
                                 <div className="w-full border-2 border-pnj-gold/40 rounded-2xl p-4 md:p-8 bg-pnj-blue/5 relative pt-10 mt-2 shadow-inner">
-                                    
-                                    {/* Nhãn Group */}
                                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#fdfbf0] px-6 py-1 border-2 border-pnj-gold rounded-full text-pnj-gold font-bold text-xs md:text-sm text-center w-max shadow-sm">
                                         CƠ HỘI BÁN HÀNG CHIA THÀNH 2 LUỒNG
                                     </div>
-
                                     <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 w-full">
-                                        
-                                        {/* ==== FLOW 1: ĐƠN HÀNG ==== */}
+                                        {/* FLOW 1 */}
                                         <div className="w-full md:w-1/2 flex flex-col">
                                             <div className="funnel-block w-full p-6 text-center flex-1 flex flex-col h-full border-t-0 shadow-lg">
-                                                <h3 className="text-xl font-black text-white uppercase flex items-center justify-center gap-2 mb-1">
-                                                    <IconCart /> Flow 1: Đơn Hàng
-                                                </h3>
+                                                <h3 className="text-xl font-black text-white uppercase flex items-center justify-center gap-2 mb-1"><IconCart /> Flow 1: Đơn Hàng</h3>
                                                 <p className="text-sm text-pnj-gold mb-5 font-medium">Đã chuyển đổi thành công</p>
-
                                                 <div className="flat-inner-card p-5 flex flex-col justify-center mb-4 flex-1 bg-white/5 border-transparent">
                                                     <div className="bg-black/30 p-3 rounded-lg mb-4 border border-pnj-gold/20">
-                                                        <span className="text-white text-2xl md:text-3xl font-bold tracking-wide">43.6 TỶ / 4,220 KH</span>
+                                                        <span className="text-white text-2xl md:text-3xl font-bold tracking-wide">{funnelData.totalRevenue} / {funnelData.totalCustomers} KH</span>
                                                     </div>
                                                     <div className="grid grid-cols-1 gap-3">
-                                                        {/* KHC */}
                                                         <div className="flat-inner-card bg-black/20 p-4 relative overflow-hidden text-left border-transparent">
                                                             <div className="absolute top-4 right-4 text-pnj-gold/50"><IconUsers /></div>
                                                             <p className="text-sm text-pnj-gold mb-1">Từ Khách Hàng Cũ</p>
-                                                            <p className="text-2xl font-bold text-white mb-1">29.4 Tỷ</p>
-                                                            <p className="text-xs text-white/60">2.393 Khách</p>
+                                                            <p className="text-2xl font-bold text-white mb-1">{funnelData.revKHC}</p>
+                                                            <p className="text-xs text-white/60">{funnelData.khKHC}</p>
                                                         </div>
-                                                        {/* KHM */}
                                                         <div className="flat-inner-card bg-black/20 p-4 relative overflow-hidden text-left border-transparent">
                                                             <div className="absolute top-4 right-4 text-pnj-gold/50"><IconUsers /></div>
                                                             <p className="text-sm text-pnj-gold mb-1">Từ Khách Hàng Mới</p>
-                                                            <p className="text-2xl font-bold text-white mb-1">14.2 Tỷ</p>
-                                                            <p className="text-xs text-white/60">1.827 Khách</p>
+                                                            <p className="text-2xl font-bold text-white mb-1">{funnelData.revKHM}</p>
+                                                            <p className="text-xs text-white/60">{funnelData.khKHM}</p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
                                                 <div className="py-1 flex justify-center"><IconArrowDown /></div>
                                                 <div className="flat-inner-card bg-pnj-gold/20 p-4 rounded-xl border border-pnj-gold mt-2">
                                                     <h4 className="text-base font-bold text-white uppercase mb-1 tracking-wide">After Sale & Nurturing</h4>
@@ -270,115 +307,109 @@
                                             </div>
                                         </div>
 
-                                        {/* Dấu HOẶC (Chỉ hiện trên Mobile để tách ngang 2 flow) */}
                                         <div className="md:hidden flex items-center justify-center w-full relative h-8">
                                             <div className="absolute w-full h-[1px] bg-pnj-gold/40"></div>
-                                            <span className="bg-[#fdfbf0] text-pnj-gold px-4 py-1 rounded-full text-xs font-bold border-2 border-pnj-gold/50 relative z-10 shadow-sm">
-                                                HOẶC
-                                            </span>
+                                            <span className="bg-[#fdfbf0] text-pnj-gold px-4 py-1 rounded-full text-xs font-bold border-2 border-pnj-gold/50 relative z-10 shadow-sm">HOẶC</span>
                                         </div>
-
-                                        {/* Vạch kẻ dọc (Chỉ hiện trên Desktop) */}
                                         <div className="hidden md:block w-[2px] bg-pnj-gold/20 mx-2 my-10 rounded-full"></div>
 
-                                        {/* ==== FLOW 2: QUALIFIED LEADS (Gộp O2O) ==== */}
+                                        {/* FLOW 2 */}
                                         <div className="w-full md:w-1/2 flex flex-col">
                                             <div className="funnel-block w-full p-6 text-center flex flex-col h-full border-t-0 shadow-lg">
-                                                <h3 className="text-xl font-black text-white uppercase flex items-center justify-center gap-2 mb-1">
-                                                    <IconUsers /> Flow 2: Qualified Leads
-                                                </h3>
+                                                <h3 className="text-xl font-black text-white uppercase flex items-center justify-center gap-2 mb-1"><IconUsers /> Flow 2: Qualified Leads</h3>
                                                 <p className="text-sm text-pnj-gold mb-5 font-medium">Khách hàng cần tư vấn thêm</p>
-
-                                                {/* Gộp trực tiếp O2O vào Flow 2 */}
                                                 <div className="flat-inner-card p-6 flex flex-col justify-center items-center flex-1 bg-white/5 border-transparent">
                                                     <div className="bg-black/30 w-full rounded-xl p-5 mb-4 border border-pnj-gold/20">
-                                                        <h4 className="text-lg md:text-xl font-black text-pnj-gold uppercase flex items-center justify-center gap-2 mb-2">
-                                                            <IconStore /> O2O Flow: Chăm sóc 1-1
-                                                        </h4>
-                                                        <p className="text-sm text-white/90 leading-relaxed border-t border-pnj-gold/20 pt-3 mt-3">
-                                                            Chuyển giao tệp Qualified Lead (SĐT) chưa mua đến Chi Nhánh.
-                                                        </p>
+                                                        <h4 className="text-lg md:text-xl font-black text-pnj-gold uppercase flex items-center justify-center gap-2 mb-2"><IconStore /> O2O Flow: Chăm sóc 1-1</h4>
+                                                        <p className="text-sm text-white/90 leading-relaxed border-t border-pnj-gold/20 pt-3 mt-3">Chuyển giao tệp Qualified Lead (SĐT) chưa mua đến Chi Nhánh.</p>
                                                     </div>
-                                                    
                                                     <div className="flex flex-wrap justify-center gap-2 mt-2 w-full">
                                                         {['Hồ Chí Minh', 'Đông Nam Bộ', 'Miền Bắc', 'Miền Tây', 'Miền Trung', 'Tây Nguyên'].map(cn => (
-                                                            <span key={cn} className="px-3 py-2 w-[45%] lg:w-[30%] text-center bg-white/10 text-white text-xs md:text-sm font-bold rounded-lg border border-white/20 hover:bg-pnj-gold/20 transition-colors cursor-default">
-                                                                {cn}
-                                                            </span>
+                                                            <span key={cn} className="px-3 py-2 w-[45%] lg:w-[30%] text-center bg-white/10 text-white text-xs md:text-sm font-bold rounded-lg border border-white/20">{cn}</span>
                                                         ))}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     )}
 
-                    {/* ================= TAB 2: THƯ VIỆN ADS DEMO (MASTER-DETAIL CAROUSEL) ================= */}
+                    {/* ================= TAB 2: THƯ VIỆN ADS DEMO ================= */}
                     {activeTab === 'ads' && (
-                        <div className="flex flex-col gap-6 relative z-10 animate-[fadeIn_0.5s_ease-in-out]">
+                        <div className="flex flex-col gap-4 md:gap-6 relative z-10 animate-[fadeIn_0.5s_ease-in-out]">
                             
-                            {/* Khung hiển thị Ảnh Lớn & Chi Tiết (Master View) */}
-                            <div className="flex flex-col md:flex-row gap-0 bg-pnj-blue rounded-xl overflow-hidden border border-pnj-gold/40 shadow-xl">
-                                {/* Ảnh Lớn */}
-                                <div className="w-full md:w-2/3 h-[300px] md:h-[500px] bg-black relative flex items-center justify-center">
-                                    <img 
-                                        src={adsData[activeAdIndex].image} 
-                                        alt={adsData[activeAdIndex].title} 
-                                        className="max-h-full max-w-full object-contain animate-[fadeIn_0.3s_ease-in-out]" 
-                                    />
-                                    {/* Overlay Gradient for text readability on mobile */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:hidden"></div>
-                                </div>
-
-                                {/* Thông tin Banner */}
-                                <div className="w-full md:w-1/3 p-6 md:p-8 flex flex-col justify-center text-white bg-pnj-blue">
-                                    <span className="inline-block px-3 py-1 bg-pnj-gold/20 text-pnj-gold text-xs font-bold uppercase rounded w-fit border border-pnj-gold mb-4">
-                                        {adsData[activeAdIndex].campaign}
-                                    </span>
-                                    <h2 className="text-2xl md:text-3xl font-black mb-4 leading-tight">{adsData[activeAdIndex].title}</h2>
-                                    
-                                    <div className="mt-auto md:mt-8 pt-4 border-t border-pnj-gold/30">
-                                        <p className="text-sm text-pnj-gold uppercase font-bold mb-1">Định dạng hiển thị:</p>
-                                        <p className="text-base text-white/90">{adsData[activeAdIndex].format}</p>
-                                    </div>
-                                    <div className="mt-4 flex items-center gap-2 text-white/50 text-sm">
-                                        <span>Ảnh Demo số:</span>
-                                        <span className="font-bold text-white">{activeAdIndex + 1} / {adsData.length}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Carousel 10 Ảnh Nhỏ (Thumbnails List) */}
-                            <div className="w-full">
-                                <h3 className="text-pnj-blue font-bold uppercase text-sm mb-3">Danh sách 14 Ads Demo (Vuốt để xem)</h3>
-                                <div className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar snap-x">
-                                    {adsData.map((ad, idx) => (
+                            {/* Filter Kênh (Mobile Friendly) */}
+                            <div className="w-full bg-white/60 p-3 md:p-4 rounded-xl border border-pnj-gold/30 shadow-sm backdrop-blur-sm">
+                                <p className="text-pnj-blue text-xs font-bold uppercase mb-2 ml-1">Lọc Theo Kênh Triển Khai:</p>
+                                <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1 snap-x">
+                                    {['All', 'Facebook', 'Google', 'Zalo'].map(channel => (
                                         <button 
-                                            key={ad.id}
-                                            onClick={() => setActiveAdIndex(idx)} 
-                                            className={`flex-shrink-0 w-32 h-24 md:w-40 md:h-28 rounded-lg overflow-hidden border-2 snap-center transition-all duration-300 relative ${
-                                                activeAdIndex === idx 
-                                                ? 'border-pnj-blue shadow-lg scale-100 opacity-100' 
-                                                : 'border-transparent opacity-50 hover:opacity-100 scale-95'
+                                            key={channel}
+                                            onClick={() => setActiveChannelFilter(channel)}
+                                            className={`snap-start flex-shrink-0 px-5 py-2 rounded-lg font-bold text-sm transition-all duration-300 border-2 ${
+                                                activeChannelFilter === channel
+                                                ? 'bg-pnj-blue text-white border-pnj-blue shadow-md'
+                                                : 'bg-white text-pnj-blue border-pnj-gold/40 hover:border-pnj-blue'
                                             }`}
                                         >
-                                            <img src={ad.image} className="w-full h-full object-cover" alt={`Thumb ${ad.id}`} />
-                                            {activeAdIndex === idx && (
-                                                <div className="absolute inset-0 border-4 border-pnj-gold rounded-lg pointer-events-none"></div>
-                                            )}
+                                            {channel === 'All' ? 'Tất Cả Các Kênh' : `Kênh ${channel}`}
                                         </button>
                                     ))}
                                 </div>
                             </div>
-                            
+
+                            {/* Khung hiển thị Ảnh Lớn */}
+                            <div className="flex flex-col md:flex-row gap-0 bg-pnj-blue rounded-xl overflow-hidden border border-pnj-gold/40 shadow-xl">
+                                <div className="w-full md:w-2/3 h-[250px] md:h-[500px] bg-black relative flex items-center justify-center">
+                                    <img src={activeAd.image} alt={activeAd.title} className="max-h-full max-w-full object-contain animate-[fadeIn_0.3s_ease-in-out]" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:hidden"></div>
+                                </div>
+                                <div className="w-full md:w-1/3 p-5 md:p-8 flex flex-col justify-center text-white bg-pnj-blue">
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        <span className="inline-block px-3 py-1 bg-white text-pnj-blue text-xs font-black uppercase rounded w-fit border border-white">
+                                            {activeAd.channel}
+                                        </span>
+                                        <span className="inline-block px-3 py-1 bg-pnj-gold/20 text-pnj-gold text-xs font-bold uppercase rounded w-fit border border-pnj-gold">
+                                            {activeAd.campaign}
+                                        </span>
+                                    </div>
+                                    <h2 className="text-xl md:text-3xl font-black mb-4 leading-tight">{activeAd.title}</h2>
+                                    <div className="mt-auto md:mt-8 pt-4 border-t border-pnj-gold/30">
+                                        <p className="text-sm text-pnj-gold uppercase font-bold mb-1">Định dạng hiển thị:</p>
+                                        <p className="text-sm md:text-base text-white/90">{activeAd.format}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Danh sách Ảnh Thu Nhỏ (Đã lọc) */}
+                            <div className="w-full bg-white/40 p-4 rounded-xl border border-pnj-gold/20 mb-4">
+                                <h3 className="text-pnj-blue font-black uppercase text-sm mb-3 flex items-center gap-2">
+                                    <span className="w-2 h-4 bg-pnj-gold rounded-full"></span>
+                                    DANH SÁCH DEMO {activeChannelFilter !== 'All' ? `- ${activeChannelFilter}` : ''} ({displayAds.length} ảnh)
+                                </h3>
+                                <div className="flex overflow-x-auto gap-3 pb-2 hide-scrollbar snap-x">
+                                    {displayAds.map((ad) => (
+                                        <button 
+                                            key={ad.id}
+                                            onClick={() => setActiveAd(ad)} 
+                                            className={`flex-shrink-0 w-28 h-20 md:w-40 md:h-28 rounded-lg overflow-hidden border-2 snap-center transition-all duration-300 relative ${
+                                                activeAd.id === ad.id 
+                                                ? 'border-pnj-blue shadow-lg scale-100 opacity-100' 
+                                                : 'border-transparent opacity-60 hover:opacity-100 scale-95'
+                                            }`}
+                                        >
+                                            <img src={ad.image} className="w-full h-full object-cover" alt={`Thumb ${ad.id}`} />
+                                            {activeAd.id === ad.id && <div className="absolute inset-0 border-4 border-pnj-gold rounded-lg pointer-events-none"></div>}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
                         </div>
                     )}
-
                 </div>
             );
         };
@@ -386,12 +417,5 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
-
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
 </body>
 </html>
